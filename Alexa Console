@@ -1,0 +1,142 @@
+import logging
+import ask_sdk_core.utils as ask_utils
+
+from ask_sdk_core.skill_builder import SkillBuilder
+from ask_sdk_core.dispatch_components import AbstractRequestHandler
+from ask_sdk_core.dispatch_components import AbstractExceptionHandler
+from ask_sdk_core.handler_input import HandlerInput
+
+from ask_sdk_model import Response
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+
+class LaunchRequestHandler(AbstractRequestHandler):
+    #Handler for Skill Launch.
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+
+        return ask_utils.is_request_type("LaunchRequest")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        speak_output = "Hello! welcome to academic support advisors at SHU, nice to see you!"
+        
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                 # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                .response
+        )
+
+
+class AppointmentIntentHandler(AbstractRequestHandler):
+    #Handler for Appointment Intent.
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("AppointmentIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        speak_output = "Which advisor would you like to speak to?"
+
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                 # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                .response
+        )
+
+
+class CaptureStaffIntentHandler(AbstractRequestHandler):
+    #Handler for Staff Intent.
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("CaptureStaffIntent")(handler_input)
+    
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        speak_output = "The next availability with Matthew is 7th April."
+        
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                .response
+        )
+
+
+class DateIntentHandler(AbstractRequestHandler):
+    #Handler for Date Intent.
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("DateIntent")(handler_input)
+    
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        speak_output = "Appointment with Matthew Booked for 7th April 2022."
+        
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                 # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                .response
+        )
+
+
+class CancelledIntentHandler(AbstractRequestHandler):
+    #Handler for Cancelled Appointments Intent.
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("CancelledIntent")(handler_input)
+    
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        speak_output = "Appointment with Matthew cancelled."
+        
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                 # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                .response
+        )
+
+
+class ClearAllIntentHandler(AbstractRequestHandler):
+    #Handler for Clear all Intent.
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("ClearAllIntent")(handler_input)
+    
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        speak_output = "Appointments cleared."
+        
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                 # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                .response
+        )
+
+
+
+sb = SkillBuilder()
+
+sb.add_request_handler(LaunchRequestHandler())
+sb.add_request_handler(AppointmentIntentHandler())
+sb.add_request_handler(CaptureStaffIntentHandler())
+sb.add_request_handler(DateIntentHandler())
+sb.add_request_handler(CancelledIntentHandler())
+sb.add_request_handler(ClearAllIntentHandler())
+sb.add_request_handler(HelloWorldIntentHandler())
+sb.add_request_handler(HelpIntentHandler())
+sb.add_request_handler(CancelOrStopIntentHandler())
+sb.add_request_handler(FallbackIntentHandler())
+sb.add_request_handler(SessionEndedRequestHandler())
+sb.add_request_handler(IntentReflectorHandler())
+
+sb.add_exception_handler(CatchAllExceptionHandler())
+
+lambda_handler = sb.lambda_handler()
